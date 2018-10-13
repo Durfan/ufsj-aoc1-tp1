@@ -14,7 +14,8 @@ main:
   la  $a0, fout
   jal salvaArquivo
   
-  jal exit
+  li $v0, 10          # system call: Saia do programa
+  syscall             # Saia!
 
 leArquivo:
   li   $v0, 13        # system call: Abre o arquivo
@@ -88,7 +89,3 @@ salvaArquivo:
   li   $v0, 16        # system call: Fecha o arquivo
   syscall             # Feche o arquivo!
   jr $ra
-
-exit:
-  li $v0, 10          # system call: Saia do programa
-  syscall             # Saia!

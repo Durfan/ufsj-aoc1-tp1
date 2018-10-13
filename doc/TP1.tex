@@ -18,8 +18,16 @@
 \usepackage{url}
 \bibliographystyle{plainnat}
 
+\usepackage[skip=1pt,labelfont=bf]{caption}
+\usepackage{float}
+
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily,frame=single}
+
+\usepackage{graphicx}
+\graphicspath{ {./imgs/} }
+
+\numberwithin{figure}{section}
 
 \usepackage{lipsum}
 
@@ -74,7 +82,8 @@ la  $a0, string
 jal manipulaString
 la  $a0, fout
 jal salvaArquivo
-jal exit
+li $v0, 10          # system call: Saia do programa
+syscall             # Saia!
 \end{lstlisting}
 
 Procedimento \texttt{leArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
@@ -155,11 +164,14 @@ jr $ra
 
 \lipsum[1]
 
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={exit}]
-li $v0, 10          # system call: Saia do programa
-syscall             # Saia!
-\end{lstlisting}
+\begin{figure}[H]
+	\centering
+	\caption{Questão 2, estatísticas das instruções.}
+	\vspace{0.2cm}
+	\includegraphics[width=242px]{questao2_stats}
+	\\\footnotesize Fonte: Mars Instruction Statistic Tool
+\end{figure}
+
 
 \pagebreak
 
