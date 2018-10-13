@@ -23,14 +23,15 @@
 \usepackage[skip=1pt,labelfont=bf]{caption}
 \usepackage{float}
 
-\usepackage{listings}
+\usepackage{listings,chngcntr}
 \lstset{basicstyle=\ttfamily,frame=single}
+\renewcommand{\lstlistingname}{Código}
 
 \usepackage{graphicx}
 \graphicspath{ {./imgs/} }
 
-\numberwithin{figure}{section}
-\numberwithin{table}{section}
+\numberwithin{figure}{subsection}
+\numberwithin{table}{subsection}
 
 \usepackage{lipsum}
 
@@ -41,6 +42,7 @@ Assembly MIPS}
 \date{}
 
 \begin{document}
+\counterwithin{lstlisting}{subsection}
 \maketitle
 
 \section{Introdução}
@@ -67,7 +69,7 @@ A \texttt{string} gerada no arquivo de saída possui seus caracteres maiúsculos
 Para iniciar o processamento, inicialmente os dados dos arquivos a serem carregados são declarados, assim como é definido o espaço reservado para o buffer de leitura do arquivo de entrada.
 
 \vspace{-0.5cm}
-\begin{lstlisting}[caption={.data}]
+\begin{lstlisting}[caption={\texttt{.data}},label={q2:data}]
 .data
 fin:     .asciiz "entrada.txt"
 fout:    .asciiz "saida.txt"
