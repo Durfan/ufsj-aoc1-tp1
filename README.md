@@ -9,4 +9,4 @@ Ver wiki para mais informações.
 
 ## Built With
 
-[MARS MIPS simulator](http://courses.missouristate.edu/kenvollmar/mars/) - IDE for MIPS Assembly Language Programming
+[MARS MIPS simulator](http://courses.missouristate.edu/kenvollmar/mars/)
