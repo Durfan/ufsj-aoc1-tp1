@@ -5,45 +5,45 @@ string:  .space 1024
 
 .text
 main:
+  la  $a0, fin
   jal leArquivo
+  
+  la  $a0, string
   jal manipulaString
+  
+  la  $a0, fout
   jal salvaArquivo
+  
   jal exit
 
 leArquivo:
-  # Open (for reading) a file
-  li   $v0, 13        # system call for open file
-  la   $a0, fin       # input file name
-  li   $a1, 0         # flag for reading
-  li   $a2, 0         # mode is ignored
-  syscall             # open a file
-  move $s0, $v0       # save the file descriptor
-   
-  # reading from file
-  li   $v0, 14        # system call for reading from file
-  move $a0, $s0       # file descriptor 
-  la   $a1, string    # address of buffer from which to read
-  li   $a2, 255       # hardcoded buffer length
-  syscall             # read from file
-    
-  # Close the file
-  li   $v0, 16        # system call for close file
-  move $a0, $s0       # file descriptor to close
-  syscall             # close file
+  li   $v0, 13        # system call: Abre o arquivo
+  li   $a1, 0         # flag para somente leitura
+  li   $a2, 0         # modo ignorado
+  syscall             # Abra o arquivo!
+  move $t0, $v0       # Salva o descriptor em $t0
 
-manipulaString:  
-  la $t0, string      # Load here the string
+  li   $v0, 14        # system call: Lendo o arquivo
+  move $a0, $t0       # Carrega o descriptor do arquivo
+  la   $a1, string    # endereço do buffer
+  li   $a2, 255       # hardcoded buffer length
+  syscall             # Leia o arquivo!
+  move $s0, $v0       # Salva strlen em $s0
+
+  li   $v0, 16        # system call: Fecha o arquivo
+  syscall             # Feche o arquivo!
   
+  jr $ra
+
+manipulaString:
   Loop:  
-    lb   $t2, ($t0)         # We do as always, get the first byte pointed by the address
+    lb   $t2, ($a0)         # We do as always, get the first byte pointed by the address
     beq  $t2, $zero, End    # if is equal to zero, the string is terminated
     
-    # if 'A-Z'
-    slti $t1, $t2, 90
+    slti $t1, $t2, 90       # if 'A-Z'
     bne  $t1, $zero, Upper
-    
-    # if 'a-z'
-    slti $t1, $t2, 122
+      
+    slti $t1, $t2, 122      # if 'a-z'
     bne  $t1, $zero, Lower
     
     j Continue
@@ -52,48 +52,43 @@ manipulaString:
     slti $t1, $t2, 65
     bne  $t1, $zero, Continue
     addi $t2, $t2, 32  
-    sb   $t2, ($t0)         # store it in the string
+    sb   $t2, ($a0)         # store it in the string
     j Continue
     
     Lower:
     slti $t1, $t2, 97
     bne  $t1, $zero, Continue
     addi $t2, $t2, -32  
-    sb   $t2, ($t0)         # store it in the string
+    sb   $t2, ($a0)         # store it in the string
     j Continue
 
-  Continue:  
-  # Continue the iteration  
-    addi $t0, $t0, 1        # Increment the address
-    addi $t3, $t3, 1        # strlen
+  Continue:                 # Continue the iteration
+    addi $a0, $a0, 1        # Increment the address
     j Loop
 
   End:    
-    li $v0, 4               # Print the string  
-    la $a0, string  
-    syscall
+    # li $v0, 4
+    # la $a0, string
+    # syscall
+    jr $ra
     
 salvaArquivo:
-  # Open (for writing) a file that does not exist
-  li   $v0, 13        # system call for open file
-  la   $a0, fout      # output file name
-  li   $a1, 1         # Open for writing (flags are 0: read, 1: write)
-  li   $a2, 0         # mode is ignored
-  syscall             # open a file (file descriptor returned in $v0)
-  move $s6, $v0       # save the file descriptor 
+  li   $v0, 13        # system call: Abre o arquivo
+  li   $a1, 1         # flag para escrita
+  li   $a2, 0         # modo ignorado
+  syscall             # Abra o arquivo!
+  move $t0, $v0       # Salva o descriptor em $t0 
 
-  # Write to file just opened
-  li   $v0, 15        # system call for write to file
-  move $a0, $s6       # file descriptor 
-  la   $a1, string    # address of buffer from which to write
-  add  $a2, $a2, $t3  # hardcoded buffer length
-  syscall             # write to file
+  li   $v0, 15        # system call: Escrevendo no arquivo
+  move $a0, $t0       # Carrega o descriptor do arquivo 
+  la   $a1, string    # endereço do buffer
+  move $a2, $s0       # carrega strlen de $s0
+  syscall             # Escreva no arquivo!
 
-  # Close the file 
-  li   $v0, 16        # system call for close file
-  move $a0, $s6       # file descriptor to close
-  syscall             # close file
+  li   $v0, 16        # system call: Fecha o arquivo
+  syscall             # Feche o arquivo!
+  jr $ra
 
 exit:
-  li $v0, 10
-  syscall
+  li $v0, 10          # system call: Saia do programa
+  syscall             # Saia!
