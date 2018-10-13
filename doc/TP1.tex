@@ -18,6 +18,8 @@
 \usepackage{url}
 \bibliographystyle{plainnat}
 
+\usepackage{longtable}
+\usepackage{booktabs}
 \usepackage[skip=1pt,labelfont=bf]{caption}
 \usepackage{float}
 
@@ -28,6 +30,7 @@
 \graphicspath{ {./imgs/} }
 
 \numberwithin{figure}{section}
+\numberwithin{table}{section}
 
 \usepackage{lipsum}
 
@@ -112,6 +115,27 @@ Procedimento \texttt{manipulaString} mais comentários a respeito de seu funcion
 
 \lipsum[1]
 
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption{Tabela ASCII para A-Z e a-z}
+	\label{tab:ascii}
+	\begin{tabular}{rl|rl|rl|rl|rl|rl|rl}
+		\toprule
+		 65 & A &  69 & E &  73 & I &  77 & M &  81 & Q &  85 & U &  89 & Y \\
+		 66 & B &  70 & F &  74 & J &  78 & N &  82 & R &  86 & V &  90 & Z \\
+		 67 & C &  71 & G &  75 & K &  79 & O &  83 & S &  87 & W &     &   \\
+		 68 & D &  72 & H &  76 & L &  80 & P &  84 & T &  88 & X &     &   \\
+		\midrule
+		 97 & a & 101 & e & 105 & i & 109 & m & 113 & q & 117 & u & 121 & y \\
+		 98 & b & 102 & f & 106 & j & 110 & n & 114 & r & 118 & v & 122 & z \\
+		 99 & c & 103 & g & 107 & k & 111 & o & 115 & s & 119 & w &     &   \\
+		100 & d & 104 & h & 108 & l & 112 & p & 116 & t & 120 & x &     &   \\
+		\bottomrule
+		\multicolumn{12}{l}{\footnotesize Fonte: \citet*{wiki:xxx}}
+	\end{tabular}
+\end{table}
+
 \vspace{-0.5cm}
 \begin{lstlisting}[caption={manipulaString}]
 manipulaString:
@@ -143,6 +167,8 @@ jr $ra
 \end{lstlisting}
 
 Procedimento \texttt{salvaArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
+
+\pagebreak
 
 \vspace{-0.5cm}
 \begin{lstlisting}[caption={salvaArquivo}]
