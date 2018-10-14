@@ -2,14 +2,14 @@
 
 msg1: .asciiz "\nDigite um angulo em radianos: "	
 msg2: .asciiz "\nDigite a quantidade de termos: "
-msg3: .asciiz "\nO cosseno do angulo �: "	
+msg3: .asciiz "\nO cosseno do angulo e: "	
 
 .text	
 	.globl main
 j main
 
 cosseno:
-	#c�digo para salvar o valor das variaveis
+	#codigo para salvar o valor das variaveis
 	addi $sp, $sp, -12	#Ajusta a pilha para receber 3 itens
 	sw $ra,8($sp)		#Salva o endereco de retorno
 	sw $a1,4($sp) 		#Salva o argumento n 
@@ -39,7 +39,7 @@ cosseno:
 	#operacao final do cosseno [((-1)^n) * (x^2n)]/(2n)!
 	#div $v0,$v0,$v1
 	
-	#c�digo para restaurar o valor das variaveis
+	#codigo para restaurar o valor das variaveis
 	lw $a0,0($sp)
 	lw $a1,4($sp)
 	lw $ra,8($sp)	
@@ -49,13 +49,13 @@ cosseno:
 	jr $ra
 	
 potencia:
-	#c�digo para salvar o valor das variaveis
+	#codigo para salvar o valor das variaveis
 	addi $sp, $sp, -12	#Ajusta a pilha para receber 3 itens
 	sw $ra,8($sp)		#Salva o endereco de retorno
 	sw $a1,4($sp) 		#Salva o argumento n 
 	sw $a0,0($sp) 		#Salva o argumento n
 	
-	#la�o para determinar a expressao (x^2n)
+	#laco para determinar a expressao (x^2n)
 	mul $a1,$a1,2	#$a1 = n*2 (expoente de x multiplicado por 2)
 	addi $a1,$a1,-1
 	add $t3,$zero,$a0
@@ -71,7 +71,7 @@ potencia:
 	#retorno
 	add $v0,$zero,$t3
 	
-	#c�digo para restaurar o valor das variaveis
+	#codigo para restaurar o valor das variaveis
 	lw $a0,0($sp)
 	lw $a1,4($sp)
 	lw $ra,8($sp)	
@@ -108,7 +108,7 @@ main:
 	#add $s0, $v0, $zero  # Armazena em $s0 o n?mero digitado
 	li $s0,2
 	
-	#instru��es para ler a quantidade de termos
+	#instrucoes para ler a quantidade de termos
 	li $v0, 4		# Codigo SysCall p/ escrever strings
 	la $a0, msg2	# Parametro (string a ser escrita)
 	syscall
