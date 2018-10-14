@@ -10,6 +10,7 @@
 \usepackage{indentfirst,setspace}
 \setlength{\parindent}{1.3cm}
 \setlength{\parskip}{0.2cm}
+\usepackage{enumitem}
 \singlespacing
 
 \usepackage{amssymb,amsmath,amsfonts}
@@ -59,25 +60,42 @@ A função $seno$ chama funções para calcular o fatorial e a função potênci
 
 \subsection{Questão 2}
 
-O programa lê uma \texttt{string} de um arquivo denominado \texttt{entrada.txt} e gera um novo arquivo de nome \texttt{saida.txt} contendo uma nova \texttt{string} processada. 
+O programa da Questão 2 recebe uma \textit{string} do arquivo de entrada (\texttt{entrada.txt}) e gera um arquivo de saída (\texttt{saida.txt}) contendo uma nova \textit{string} processada. O processamento da \textit{string} consiste na troca dos caracteres maiúsculos por minúsculos, e seus caracteres minúsculos por maiúsculos.
 
-A \texttt{string} gerada no arquivo de saída possui seus caracteres maiúsculos trocados por minúsculos, e seus  caracteres minúsculos trocados por maiúsculos.
+Para a implementação desse programa, uma lista de instruções e pseudo-instruções foi utilizada com o objetivo de simplificar o desenvolvimento.
 
-Para iniciar o processamento, inicialmente os dados dos arquivos a serem carregados são declarados, assim como é definido o espaço reservado para o buffer de leitura do arquivo de entrada.
+\begin{itemize}[leftmargin=1.3cm]
+\setlength\itemsep{1pt}
+	 \item A pseudo-instrução {\ttfamily li} (\textit{Load Immediate}), carrega um valor imediato em um registrador.
+	 \item A pseudo-instrução {\ttfamily la} (\textit{Load Address}), faz com que um registrador receba o valor de um ponteiro de outro local na memória.
+	 \item A pseudo-instrução {\ttfamily move}, move o conteúdo de um registro para outro registro.
+	 \item A instrução {\ttfamily lb} (\textit{Load Byte}), transfere um byte de dados de uma posição da memória principal para um registrador.
+	 \item A instrução {\ttfamily sb} (\textit{Store Byte}), transfere um byte de dados de um registro para uma posição na memória principal.
+\end{itemize}
 
-\begin{table}[H]
-	\begin{tabular}{>{\ttfamily}l>{\ttfamily}l}
-	.data   & \\
-	fin:	& .asciiz "entrada.txt" \\
-	fout:	& .asciiz "saida.txt" \\
-	string:	& .space 1024 \\
-	\end{tabular}
-\end{table}
+As instruções do programa são listadas e comentadas abaixo:
 
-Inicia .text. A chamada para os procedimentos e a passagem das referencias.
+Inicialmente, são declarados na área de segmento de dados do programa as variáveis a serem utilizadas e seus valores:
 
 \begin{table}[H]
 	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption*{Área de declaração de variáveis}
+	\label{q2cod:data}
+	\begin{tabular}{>{\ttfamily}p{1.2cm} >{\ttfamily}p{4.6cm} p{9.2cm}}
+	\toprule
+	.data   & &  \\
+	fin:    & .asciiz "entrada.txt" &  Endereço do caminho do arquivo de entrada.\\
+	fout:   & .asciiz "saida.txt"   &  Endereço do caminho do arquivo de saída.\\
+	string: & .space 1024 &  Reserva 1024 bytes para o \textit{buffer} que conterá a \textit{string}. \\
+	\bottomrule
+	\end{tabular}
+\end{table}
+
+Passa-se então a área de instruções {\ttfamily .text}, que contém os três procedimentos a serem realizados. A chamada para esses procedimentos é feita no escopo principal do programa ({\ttfamily main}):
+
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1.2}
 	\centering
 	\caption*{Escopo principal do programa}
 	\label{q2cod:main}
@@ -85,22 +103,31 @@ Inicia .text. A chamada para os procedimentos e a passagem das referencias.
 		\toprule
 		main:              & \\
 		\midrule
-		la \$a0,fin	       & atribui o arquivo de entrada a \ttfamily{\$a0} \\
-		jal leArquivo      & inicia o procedimento \\
-		la \$a0,string     & atribui a string a \ttfamily{\$a0} \\
-		jal manipulaString & inicia o procedimento \\
-		la \$a0,fout       & atribui o arquivo de saida a \ttfamily{\$a0} \\
-		jal salvaArquivo   & inicia o procedimento \\
-		li \$v0,10         & system call: Saia do programa \\
-		syscall            & Saia! \\
+		la \$a0,fin	       & Carrega o endereço de {\ttfamily fin} para a {\ttfamily \$a0}. \\
+		jal leArquivo      & Inicia o procedimento {\ttfamily leArquivo}. \\
+		la \$a0,string     & Carrega o endereço de {\ttfamily string} para a {\ttfamily \$a0}. \\
+		jal manipulaString & Inicia o procedimento {\ttfamily manipulaString}. \\
+		la \$a0,fout       & Carrega o endereço de {\ttfamily fout} para a {\ttfamily \$a0}. \\
+		jal salvaArquivo   & Inicia o procedimento {\ttfamily salvaArquivo}. \\
+		li \$v0,10         & \textit{load immediate} 10 em {\ttfamily \$v0} \\
+		syscall            & Executa o número de serviço em {\ttfamily \$v0}. Terminar programa. \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Procedimento \texttt{leArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
+Resumidamente o processo no {\ttfamily main} consiste em três partes:
+
+\begin{enumerate}[leftmargin=1.3cm]
+\setlength\itemsep{1pt}
+	\item Abra o arquivo e carregue a \textit{string}; salve o numero de caracteres lidos.
+	\item Manipule a \textit{string}; troque letras maiúsculas por minusculas e vice-versa.
+	\item Salve para o arquivo; salva a \textit{string} modificada no arquivo de saída.
+\end{enumerate}
+
+Os procedimentos do programa são listados e comentados a seguir:
 
 \begin{table}[H]
-	\renewcommand{\arraystretch}{1}
+	\renewcommand{\arraystretch}{1.2}
 	\centering
 	\caption*{Procedimento para ler o arquivo}
 	\label{q2cod:lefile}
@@ -108,30 +135,26 @@ Procedimento \texttt{leArquivo} mais comentários a respeito de seu funcionament
 		\toprule
 		leArquivo:       & \\
 		\midrule[0.01cm]
-		li \$v0,13       & system call: Abre o arquivo \\
-		li \$a1,0        & flag para somente leitura \\
+		li \$v0,13       & Seta o número de serviço para a abertura de arquivo.  \\
+		li \$a1,0        & Seta flag = 0, \textit{read-only}. \\
 		li \$a2,0        & modo ignorado \\
-		syscall          & Abra o arquivo! \\
-		move \$t0,\$v0   & Salva o descriptor em \ttfamily{\$t0} \\
+		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Abrir arquivo. \\
+		move \$t0,\$v0   & Salva o descritor do arquivo em {\ttfamily \$v0} para \ttfamily{\$t0}. \\
 		\midrule[0.01cm]
-		li \$v0,14       & system call: Lendo o arquivo \\
-		move \$a0,\$t0   & Carrega o descriptor do arquivo \\
-		la \$a1,string   & endereco do buffer \\
+		li \$v0,14       & Seta o número de serviço para a leitura de arquivo. \\
+		move \$a0,\$t0   & Carrega o descritor do arquivo em {\ttfamily \$t0} para \ttfamily{\$a0}. \\
+		la \$a1,string   & Carrega o endereço de {\ttfamily string} para a {\ttfamily \$a1}. \\
 		li \$a2,255      & hardcoded buffer length \\
-		syscall          & Leia o arquivo! \\
-		move \$s0,\$v0   & Salva strlen em \ttfamily{\$s0} \\
+		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Ler arquivo. \\
+		move \$s0,\$v0   & Salva o número de caracteres lidos em \ttfamily{\$s0} \\
 		\midrule[0.01cm]
-		li \$v0,16       & system call: Fecha o arquivo \\
-		syscall          & Feche o arquivo! \\
+		li \$v0,16       & Seta o número de serviço para a fechar o arquivo. \\
+		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Fechar arquivo. \\
 		\midrule[0.01cm]
 		jr \$ra          & Retorna do procediemnto \\
 		\bottomrule
 	\end{tabular}
 \end{table}
-
-Procedimento \texttt{manipulaString} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
-
-\lipsum[1]
 
 \begin{table}[H]
 	\renewcommand{\arraystretch}{1}
@@ -195,8 +218,6 @@ Procedimento \texttt{manipulaString} mais comentários a respeito de seu funcion
 	\end{tabular}
 \end{table}
 
-Procedimento \texttt{salvaArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
-
 \begin{table}[H]
 	\renewcommand{\arraystretch}{1}
 	\centering
@@ -224,11 +245,15 @@ Procedimento \texttt{salvaArquivo} mais comentários a respeito de seu funcionam
 	\end{tabular}
 \end{table}
 
-\lipsum[1]
+\pagebreak
+
+\section{Estatísticas das instruções}
+
+Os resultados fornecidos pela ferramenta de estatísticas de instruções do MARS são sumarizados para cada questão nas figuras abaixo:  
 
 \begin{figure}[H]
 	\centering
-	\caption{Questão 2, estatísticas das instruções.}
+	\caption*{Questão 2, resultado da análise}
 	\vspace{0.2cm}
 	\includegraphics[width=242px]{questao2_stats}
 	\\\footnotesize Fonte: Mars Instruction Statistic Tool
