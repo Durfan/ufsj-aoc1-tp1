@@ -23,9 +23,7 @@
 \usepackage[skip=1pt,labelfont=bf]{caption}
 \usepackage{float}
 
-\usepackage{listings,chngcntr}
-\lstset{basicstyle=\ttfamily,frame=single}
-\renewcommand{\lstlistingname}{Código}
+\usepackage{array}
 
 \usepackage{graphicx}
 \graphicspath{ {./imgs/} }
@@ -42,7 +40,6 @@ Assembly MIPS}
 \date{}
 
 \begin{document}
-\counterwithin{lstlisting}{subsection}
 \maketitle
 
 \section{Introdução}
@@ -68,50 +65,69 @@ A \texttt{string} gerada no arquivo de saída possui seus caracteres maiúsculos
 
 Para iniciar o processamento, inicialmente os dados dos arquivos a serem carregados são declarados, assim como é definido o espaço reservado para o buffer de leitura do arquivo de entrada.
 
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={\texttt{.data}},label={q2:data}]
-.data
-fin:     .asciiz "entrada.txt"
-fout:    .asciiz "saida.txt"
-string:  .space 1024
-\end{lstlisting}
+\begin{table}[H]
+	\begin{tabular}{>{\ttfamily}l>{\ttfamily}l}
+	.data   & \\
+	fin:	& .asciiz "entrada.txt" \\
+	fout:	& .asciiz "saida.txt" \\
+	string:	& .space 1024 \\
+	\end{tabular}
+\end{table}
 
 Inicia .text. A chamada para os procedimentos e a passagem das referencias.
 
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={main}]
-main:
-la  $a0, fin
-jal leArquivo
-la  $a0, string
-jal manipulaString
-la  $a0, fout
-jal salvaArquivo
-li $v0, 10          # system call: Saia do programa
-syscall             # Saia!
-\end{lstlisting}
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption*{Escopo principal do programa}
+	\label{q2cod:main}
+	\begin{tabular}{>{\ttfamily}p{4cm} p{11cm}}
+		\toprule
+		main:              & \\
+		\midrule
+		la \$a0,fin	       & atribui o arquivo de entrada a \ttfamily{\$a0} \\
+		jal leArquivo      & inicia o procedimento \\
+		la \$a0,string     & atribui a string a \ttfamily{\$a0} \\
+		jal manipulaString & inicia o procedimento \\
+		la \$a0,fout       & atribui o arquivo de saida a \ttfamily{\$a0} \\
+		jal salvaArquivo   & inicia o procedimento \\
+		li \$v0,10         & system call: Saia do programa \\
+		syscall            & Saia! \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 Procedimento \texttt{leArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
 
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={leArquivo}]
-leArquivo:
-li   $v0, 13        # system call: Abre o arquivo
-li   $a1, 0         # flag para somente leitura
-li   $a2, 0         # modo ignorado
-syscall             # Abra o arquivo!
-move $t0, $v0       # Salva o descriptor em $t0
-li   $v0, 14        # system call: Lendo o arquivo
-move $a0, $t0       # Carrega o descriptor do arquivo
-la   $a1, string    # endereco buffer
-li   $a2, 255       # hardcoded buffer length
-syscall             # Leia o arquivo!
-move $s0, $v0       # Salva strlen em $s0
-li   $v0, 16        # system call: Fecha o arquivo
-syscall             # Feche o arquivo!
-jr $ra
-\end{lstlisting}
-
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption*{Procedimento para ler o arquivo}
+	\label{q2cod:lefile}
+	\begin{tabular}{>{\ttfamily}p{4cm} p{11cm}}
+		\toprule
+		leArquivo:       & \\
+		\midrule[0.01cm]
+		li \$v0,13       & system call: Abre o arquivo \\
+		li \$a1,0        & flag para somente leitura \\
+		li \$a2,0        & modo ignorado \\
+		syscall          & Abra o arquivo! \\
+		move \$t0,\$v0   & Salva o descriptor em \ttfamily{\$t0} \\
+		\midrule[0.01cm]
+		li \$v0,14       & system call: Lendo o arquivo \\
+		move \$a0,\$t0   & Carrega o descriptor do arquivo \\
+		la \$a1,string   & endereco do buffer \\
+		li \$a2,255      & hardcoded buffer length \\
+		syscall          & Leia o arquivo! \\
+		move \$s0,\$v0   & Salva strlen em \ttfamily{\$s0} \\
+		\midrule[0.01cm]
+		li \$v0,16       & system call: Fecha o arquivo \\
+		syscall          & Feche o arquivo! \\
+		\midrule[0.01cm]
+		jr \$ra          & Retorna do procediemnto \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 Procedimento \texttt{manipulaString} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
 
@@ -138,57 +154,75 @@ Procedimento \texttt{manipulaString} mais comentários a respeito de seu funcion
 	\end{tabular}
 \end{table}
 
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={manipulaString}]
-manipulaString:
-Loop:  
-lb   $t2, ($a0)         # get the first byte pointed
-beq  $t2, $zero, End    # if is equal to zero, End
-slti $t1, $t2, 90       # if 'A-Z'
-bne  $t1, $zero, Upper
-slti $t1, $t2, 122      # if 'a-z'
-bne  $t1, $zero, Lower
-j Continue
-Upper:
-slti $t1, $t2, 65
-bne  $t1, $zero, Continue
-addi $t2, $t2, 32  
-sb   $t2, ($a0)         # store it in the string
-j Continue
-Lower:
-slti $t1, $t2, 97
-bne  $t1, $zero, Continue
-addi $t2, $t2, -32  
-sb   $t2, ($a0)         # store it in the string
-j Continue
-Continue:               # Continue the iteration
-addi $a0, $a0, 1        # Increment the address
-j Loop
-End:    
-jr $ra
-\end{lstlisting}
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption*{Procedimento para alterar a string}
+	\label{q2cod:manipula}
+	\begin{tabular}{>{\ttfamily}p{5cm} p{10cm}}
+		\toprule
+		manipulaString:        & \\
+		\midrule[0.01cm]
+		Loop:                  & loop para cada caractere da string \\
+		lb \$t2,(\$a0)         & Aponta \$t2 para a posição de endereço de \ttfamily{\$a0} \\
+		beq \$t2,\$zero,End    & Se \$t2 conter NULL, a string terminou, \ttfamily{End} \\
+		slti \$t1,\$t2,90      & \$t2 e menor que 90(Z)? \\
+		bne \$t1,\$zero,Upper  & Se \$t1 for 1 então 1 != 0, vai pra \ttfamily{Upper} \\
+		slti \$t1,\$t2,122     & \$t2 e menor que 122(z)? \\
+		bne \$t1,\$zero,Lower  & Se \$t1 for 1 então 1 != 0, vai pra \ttfamily{Lower} \\
+		j Next                 & Va pra Next \\
+		\midrule[0.01cm]
+		Upper:                 & rotina para uppercase \\
+		slti \$t1,\$t2,65      & \$t2 e menor que 65(A)? \\
+		bne \$t1,\$zero,Next   & Se \$t1 for 1 então não é uma letra, \ttfamily{Next} \\
+		addi \$t2,\$t2,32      & Soma 32 a \$t2 \\
+		sb \$t2,(\$a0)         & armazena o valor na posição em \ttfamily{\$a0} \\
+		j Next                 & Va pra Next \\
+		\midrule[0.01cm]
+		Lower:                 & rotina para lowercase \\
+		slti \$t1,\$t2,97      & \$t2 e menor que 97(a)? \\
+		bne \$t1,\$zero,Next   & Se \$t1 for 1 então não é uma letra, Next \\
+		addi \$t2,\$t2,-32     & Soma -32 a \ttfamily{\$t2} \\
+		sb \$t2,(\$a0)         & armazena o valor na posição em \ttfamily{\$a0} \\
+		\midrule[0.01cm]
+		Next:                  & Continua a interação \\
+		addi \$a0,\$a0,1       & Incrementa o endereço de \ttfamily{\$a0} \\
+		j Loop                 & Va para Loop \\
+		\midrule[0.01cm]
+		End:                   & Termino do Loop \\
+		jr \$ra                & Retorna do procedimento \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 Procedimento \texttt{salvaArquivo} mais comentários a respeito de seu funcionamento por etapas e breve sumario de conclusão desse.
 
-\pagebreak
-
-\vspace{-0.5cm}
-\begin{lstlisting}[caption={salvaArquivo}]
-salvaArquivo:
-li   $v0, 13        # system call: Abre o arquivo
-li   $a1, 1         # flag para escrita
-li   $a2, 0         # modo ignorado
-syscall             # Abra o arquivo!
-move $t0, $v0       # Salva o descriptor em $t0 
-li   $v0, 15        # system call: Escrevendo no arquivo
-move $a0, $t0       # Carrega o descriptor do arquivo 
-la   $a1, string    # endereco do buffer
-move $a2, $s0       # carrega strlen de $s0
-syscall             # Escreva no arquivo!
-li   $v0, 16        # system call: Fecha o arquivo
-syscall             # Feche o arquivo!
-jr $ra
-\end{lstlisting}
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1}
+	\centering
+	\caption*{Procedimento para salvar o arquivo}
+	\label{q2cod:salvafile}
+	\begin{tabular}{>{\ttfamily}p{4cm} p{11cm}}
+		\toprule
+		salvaArquivo:    & \\
+		li \$v0, 13      & system call: Abre o arquivo \\
+		li \$a1, 1       & flag para escrita \\
+		li \$a2, 0       & modo ignorado \\
+		syscall          & Abra o arquivo! \\
+		move \$t0,\$v0   & Salva o descriptor em \$t0 \\
+		\midrule[0.01cm]
+		li \$v0,15       & system call: Escrevendo no arquivo \\
+		move \$a0,\$t0   & Carrega o descriptor do arquivo \\
+		la \$a1,string   & endereço do buffer \\
+		move \$a2,\$s0   & carrega strlen de \$s0 \\
+		syscall          & Escreva no arquivo! \\
+		\midrule[0.01cm]
+		li \$v0,16       & system call: Fecha o arquivo \\
+		syscall          & Feche o arquivo! \\
+		jr \$ra          & Retorna do procedimento \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \lipsum[1]
 
@@ -199,7 +233,6 @@ jr $ra
 	\includegraphics[width=242px]{questao2_stats}
 	\\\footnotesize Fonte: Mars Instruction Statistic Tool
 \end{figure}
-
 
 \pagebreak
 
