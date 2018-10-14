@@ -82,14 +82,14 @@ potencia:
 
 fatorial:
 	addi $sp, $sp, -8#Ajusta a pilha para receber 2 itens
-	sw $ra, 4($sp) #Salva o endere�o de retorno
+	sw $ra, 4($sp) #Salva o endereco de retorno
 	sw $a1, 0($sp) #Salva o argumento n
 	addi $t1, $zero, 1 # $t1 recebe 1
 	slt $t0, $a1, $t1 #Testa se n < 1
 	beq $t0, $zero, L1 #Se n >= 1, desvia para L1
 	addi $v1, $zero, 1 #Retorna o valor 1
 	addi $sp, $sp, 8 #Elimina 2 itens da pilha
-	jr $ra #Retorna para depois da instru��o jal
+	jr $ra #Retorna para depois da instrucao jal
 	L1: addi $a1, $a1, -1 # n >= 1: argumento recebe (n-1)
 	jal fatorial # chama fatorial com argumento (n-1)
 	lw $a1, 0($sp) # retorna de jal: restaura argumento n
