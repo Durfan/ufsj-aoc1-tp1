@@ -4,34 +4,34 @@ fout:    .asciiz "/home/cecilio/git/ufsj-aoc1-tp1/saida.txt"
 string:  .space 1024
 
 .text
-main:                 # Escopo principal do programa
-  la $a0,fin          # atribui o arquivo de entrada a $a0
-  jal leArquivo       # inicia o procedimento
-  la $a0,string       # atribui a string a $a0
-  jal manipulaString  # inicia o procedimento
-  la $a0,fout         # atribui o arquivo de saida a $a0
-  jal salvaArquivo    # inicia o procedimento
-  li $v0,10           # system call: Saia do programa
-  syscall             # Saia!
+main:                    # Escopo principal do programa
+  la $a0,fin             # atribui o arquivo de entrada a $a0
+  jal leArquivo          # inicia o procedimento
+  la $a0,string          # atribui a string a $a0
+  jal manipulaString     # inicia o procedimento
+  la $a0,fout            # atribui o arquivo de saida a $a0
+  jal salvaArquivo       # inicia o procedimento
+  li $v0,10              # system call: Saia do programa
+  syscall                # Saia!
 
-leArquivo:            # procedimento para ler o arquivo
-  li $v0,13           # system call: Abre o arquivo
-  li $a1,0            # flag para somente leitura
-  li $a2,0            # modo ignorado
-  syscall             # Abra o arquivo!
-  move $t0,$v0        # Salva o descriptor em $t0
+leArquivo:               # procedimento para ler o arquivo
+  li $v0,13              # system call: Abre o arquivo
+  li $a1,0               # flag para somente leitura
+  li $a2,0               # modo ignorado
+  syscall                # Abra o arquivo!
+  move $t0,$v0           # Salva o descriptor em $t0
 
-  li $v0,14           # system call: Lendo o arquivo
-  move $a0,$t0        # Carrega o descriptor do arquivo
-  la $a1,string       # endereco do buffer
-  li $a2,255          # hardcoded buffer length
-  syscall             # Leia o arquivo!
-  move $s0,$v0        # Salva strlen em $s0
+  li $v0,14              # system call: Lendo o arquivo
+  move $a0,$t0           # Carrega o descriptor do arquivo
+  la $a1,string          # endereco do buffer
+  li $a2,255             # hardcoded buffer length
+  syscall                # Leia o arquivo!
+  move $s0,$v0           # Salva strlen em $s0
 
-  li $v0,16           # system call: Fecha o arquivo
-  syscall             # Feche o arquivo!
+  li $v0,16              # system call: Fecha o arquivo
+  syscall                # Feche o arquivo!
   
-  jr $ra              # Retorna do procedimento
+  jr $ra                 # Retorna do procedimento
 
 manipulaString:          # procedimento para alterar a string
   Loop:                  # loop para cada character da string
@@ -66,19 +66,19 @@ manipulaString:          # procedimento para alterar a string
     #syscall               # Imprima!
     jr $ra               # Retorna do procedimento
 
-salvaArquivo:         # procedimento para salvar o arquivo
-  li $v0,13           # system call: Abre o arquivo
-  li $a1,1            # flag para escrita
-  li $a2,0            # modo ignorado
-  syscall             # Abra o arquivo!
-  move $t0,$v0        # Salva o descriptor em $t0
+salvaArquivo:            # procedimento para salvar o arquivo
+  li $v0,13              # system call: Abre o arquivo
+  li $a1,1               # flag para escrita
+  li $a2,0               # modo ignorado
+  syscall                # Abra o arquivo!
+  move $t0,$v0           # Salva o descriptor em $t0
 
-  li $v0,15           # system call: Escrevendo no arquivo
-  move $a0,$t0        # Carrega o descriptor do arquivo
-  la $a1,string       # endereço do buffer
-  move $a2,$s0        # carrega strlen de $s0
-  syscall             # Escreva no arquivo!
+  li $v0,15              # system call: Escrevendo no arquivo
+  move $a0,$t0           # Carrega o descriptor do arquivo
+  la $a1,string          # endereço do buffer
+  move $a2,$s0           # carrega strlen de $s0
+  syscall                # Escreva no arquivo!
 
-  li $v0,16           # system call: Fecha o arquivo
-  syscall             # Feche o arquivo!
-  jr $ra              # Retorna do procedimento
+  li $v0,16              # system call: Fecha o arquivo
+  syscall                # Feche o arquivo!
+  jr $ra                 # Retorna do procedimento
