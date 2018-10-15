@@ -20,17 +20,14 @@ leArquivo:               # procedimento para ler o arquivo
   li $a2,0               # modo ignorado
   syscall                # Abra o arquivo!
   move $t0,$v0           # Salva o descriptor em $t0
-
   li $v0,14              # system call: Lendo o arquivo
   move $a0,$t0           # Carrega o descriptor do arquivo
   la $a1,string          # endereco do buffer
   li $a2,255             # hardcoded buffer length
   syscall                # Leia o arquivo!
   move $s0,$v0           # Salva strlen em $s0
-
   li $v0,16              # system call: Fecha o arquivo
   syscall                # Feche o arquivo!
-  
   jr $ra                 # Retorna do procedimento
 
 manipulaString:          # procedimento para alterar a string
@@ -59,7 +56,6 @@ manipulaString:          # procedimento para alterar a string
   Next:                  # Continua a interacao
     addi $a0,$a0,1       # Incrementa o endereco de $a0
     j Loop               # Va para Loop
-
   End:                   # Termino do Loop
     #li $v0,4              # system call: Imprimir string
     #la $a0,string         # endereco da string
@@ -72,13 +68,11 @@ salvaArquivo:            # procedimento para salvar o arquivo
   li $a2,0               # modo ignorado
   syscall                # Abra o arquivo!
   move $t0,$v0           # Salva o descriptor em $t0
-
   li $v0,15              # system call: Escrevendo no arquivo
   move $a0,$t0           # Carrega o descriptor do arquivo
   la $a1,string          # endereço do buffer
   move $a2,$s0           # carrega strlen de $s0
   syscall                # Escreva no arquivo!
-
   li $v0,16              # system call: Fecha o arquivo
   syscall                # Feche o arquivo!
   jr $ra                 # Retorna do procedimento
