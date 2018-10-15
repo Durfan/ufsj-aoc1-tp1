@@ -100,7 +100,7 @@ fatorial:
 	L1: addi $a1,$a1,-1 # n >= 1: argumento recebe (n-1)
 	jal fatorial        # chama fatorial com argumento (n-1)
 	lw $a1,0($sp)       # retorna de jal: restaura argumento n
-	lw $ra,4($sp)       # restaura o endere�o de retorno
+	lw $ra,4($sp)       # restaura o endereco de retorno
 	addi $sp,$sp,8      # ajusta o stack pointer para eliminar 2 itens
 	mul $v1,$a1,$v1     # retorna n*fact(n-1)
 	jr $ra              # retorna para o chamador

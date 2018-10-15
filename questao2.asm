@@ -6,11 +6,11 @@ string:  .space 1024
 .text
 main:                    # Escopo principal do programa
   la $a0,fin             # atribui o arquivo de entrada a $a0
-  jal leArquivo          # inicia o procedimento
+  jal leArquivo          # chama o procedimento
   la $a0,string          # atribui a string a $a0
-  jal manipulaString     # inicia o procedimento
+  jal manipulaString     # chama o procedimento
   la $a0,fout            # atribui o arquivo de saida a $a0
-  jal salvaArquivo       # inicia o procedimento
+  jal salvaArquivo       # chama o procedimento
   li $v0,10              # system call: Saia do programa
   syscall                # Saia!
 
