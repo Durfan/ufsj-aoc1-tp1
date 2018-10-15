@@ -15,9 +15,8 @@
 
 \usepackage{amssymb,amsmath,amsfonts}
 
-\usepackage[numbers]{natbib}
-\usepackage{url}
-\bibliographystyle{plainnat}
+\usepackage[num,overcite]{abntex2cite}
+\citebrackets[]
 
 \usepackage{longtable}
 \usepackage{booktabs}
@@ -49,7 +48,7 @@ Este documento apresenta a solução em MIPS para as duas questões do primeiro 
 
 \section{Implementação}
 
-Toda a implementação foi realizada utilizando o programa de desenvolvimeto MARS (\textit{MIPS Assembler and Runtime Simulator}) como IDE.
+Toda a implementação foi realizada utilizando o programa de desenvolvimento MARS (\textit{MIPS Assembler and Runtime Simulator}) como IDE.
 
 \subsection{Questão 1}
 
@@ -136,7 +135,7 @@ Os procedimentos do programa são listados e comentados a seguir:
 		leArquivo:       & \\
 		\midrule[0.01cm]
 		li \$v0,13       & Seta o número de serviço para a abertura de arquivo.  \\
-		li \$a1,0        & Seta flag = 0, \textit{read-only}. \\
+		li \$a1,0        & Seta \textit{flag} = 0, \textit{read-only}. \\
 		li \$a2,0        & modo ignorado \\
 		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Abrir arquivo. \\
 		move \$t0,\$v0   & Salva o descritor do arquivo em {\ttfamily \$v0} para \ttfamily{\$t0}. \\
@@ -144,20 +143,20 @@ Os procedimentos do programa são listados e comentados a seguir:
 		li \$v0,14       & Seta o número de serviço para a leitura de arquivo. \\
 		move \$a0,\$t0   & Carrega o descritor do arquivo em {\ttfamily \$t0} para \ttfamily{\$a0}. \\
 		la \$a1,string   & Carrega o endereço de {\ttfamily string} para a {\ttfamily \$a1}. \\
-		li \$a2,255      & hardcoded buffer length \\
+		li \$a2,255      & \textit{hardcoded buffer length} \\
 		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Ler arquivo. \\
 		move \$s0,\$v0   & Salva o número de caracteres lidos em \ttfamily{\$s0} \\
 		\midrule[0.01cm]
 		li \$v0,16       & Seta o número de serviço para a fechar o arquivo. \\
 		syscall          & Executa o número de serviço em {\ttfamily \$v0}. Fechar arquivo. \\
 		\midrule[0.01cm]
-		jr \$ra          & Retorna do procediemnto \\
+		jr \$ra          & Retorna do procedimento \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
 \begin{table}[H]
-	\renewcommand{\arraystretch}{1}
+	\renewcommand{\arraystretch}{1.2}
 	\centering
 	\caption{Tabela ASCII para A-Z e a-z}
 	\label{tab:ascii}
@@ -173,7 +172,7 @@ Os procedimentos do programa são listados e comentados a seguir:
 		 99 & c & 103 & g & 107 & k & 111 & o & 115 & s & 119 & w &     &   \\
 		100 & d & 104 & h & 108 & l & 112 & p & 116 & t & 120 & x &     &   \\
 		\bottomrule
-		\multicolumn{12}{l}{\footnotesize Fonte: \citet*{wiki:xxx}}
+		\multicolumn{12}{l}{\footnotesize Fonte: \citeauthor{wiki:xxx}}
 	\end{tabular}
 \end{table}
 
@@ -226,19 +225,19 @@ Os procedimentos do programa são listados e comentados a seguir:
 	\begin{tabular}{>{\ttfamily}p{4cm} p{11cm}}
 		\toprule
 		salvaArquivo:    & \\
-		li \$v0, 13      & system call: Abre o arquivo \\
-		li \$a1, 1       & flag para escrita \\
+		li \$v0, 13      & \textit{system call}: Abre o arquivo \\
+		li \$a1, 1       & \textit{flag} para escrita \\
 		li \$a2, 0       & modo ignorado \\
 		syscall          & Abra o arquivo! \\
-		move \$t0,\$v0   & Salva o descriptor em \$t0 \\
+		move \$t0,\$v0   & Salva o \textit{descriptor} em \$t0 \\
 		\midrule[0.01cm]
-		li \$v0,15       & system call: Escrevendo no arquivo \\
+		li \$v0,15       & \textit{system call}: Escrevendo no arquivo \\
 		move \$a0,\$t0   & Carrega o descriptor do arquivo \\
-		la \$a1,string   & endereço do buffer \\
-		move \$a2,\$s0   & carrega strlen de \$s0 \\
+		la \$a1,string   & endereço do \textit{buffer} \\
+		move \$a2,\$s0   & carrega \textit{strlen} de \$s0 \\
 		syscall          & Escreva no arquivo! \\
 		\midrule[0.01cm]
-		li \$v0,16       & system call: Fecha o arquivo \\
+		li \$v0,16       & \textit{system call}: Fecha o arquivo \\
 		syscall          & Feche o arquivo! \\
 		jr \$ra          & Retorna do procedimento \\
 		\bottomrule
@@ -259,10 +258,7 @@ Os resultados fornecidos pela ferramenta de estatísticas de instruções do MAR
 	\\\footnotesize Fonte: Mars Instruction Statistic Tool
 \end{figure}
 
-\pagebreak
-
 \begin{flushleft}
-	\nocite{*}
 	\bibliography{TP1}
 	\vfill
 	O histórico do desenvolvimento desse trabalho se encontra online em:\\ \url{https://github.com/Durfan/ufsj-aoc1-tp1}.
