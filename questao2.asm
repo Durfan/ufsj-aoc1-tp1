@@ -4,6 +4,8 @@ fout:    .asciiz "/home/cecilio/git/ufsj-aoc1-tp1/saida.txt"
 string:  .space 1024
 
 .text
+.globl main
+
 main:                    # Escopo principal do programa
   la $a0,fin             # atribui o arquivo de entrada a $a0
   jal leArquivo          # chama o procedimento
