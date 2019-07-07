@@ -1,4 +1,4 @@
-# Primeiro Trabalho Prático de AOC I / Assembly MIPS
+# Trabalho Prático de AOC I / Assembly MIPS
 
 Códigos fontes para duas questões do trabalho prático:
 
